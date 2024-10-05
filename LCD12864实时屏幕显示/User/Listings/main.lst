@@ -1,0 +1,92 @@
+C251 COMPILER V5.60.0,  main                                                               21/04/24  18:50:23  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE main
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: D:\Keil_v5\C251\BIN\C251.EXE main.c INTR2 BROWSE INCDIR(..\Driver) DEBUG PRINT(.\Listings\main.lst)
+                    - TABS(2) OBJECT(.\Objects\main.obj) 
+
+stmt  level    source
+
+    1          /* 
+    2           * ×÷Õß£ºqILoongIp
+    3           * ¹¤×÷ÆµÂÊ£º33.1776Mhz
+    4           * Ã¿´ÎÖØÐÂ½øÐÐ´®¿ÚÍ¨Ñ¶Ç°½¨ÒéÏÈ¸´Î»»òÖØÐÂÉÏµç
+    5           */
+    6          #include <12864.h>
+    7          #include <Uart.h>
+    8          #include <STC32G.H>
+    9          
+   10          unsigned char Uart_Recv;//ÓÃÓÚ½ÓÊÕ´®¿ÚÐÅÏ¢
+   11          unsigned char row = 0,col = 0;
+   12          
+   13          void Uart_Proc() interrupt 4
+   14          {
+   15   1        //É¨ÃèÊÇÕâÑùµÄ£¬Ã¿½ÓÊÕÒ»¸ö×Ö½Ú¾Í»­Ò»¸ö×Ö½Ú£¬ÌÈÈôÒ»´ÎÐÔ½ÓÊÕ16*64¸ö×Ö½ÚÔÙ»­µÄ»°»áµ¼ÖÂËÙ¶È±äÂý
+   16   1        if(RI)        //¼ì²â´®¿Ú1½ÓÊÕÖÐ¶Ï
+   17   1        {
+   18   2          Uart_Recv = SBUF;
+   19   2          RI = 0;     //Çå³ý´®¿Ú1½ÓÊÕÖÐ¶ÏÇëÇóÎ»
+   20   2          if(col == 0)
+   21   2          {
+   22   3            //ÐÐºÅºÍÁÐºÅµÄ³õÊ¼ÖµÐè²Î¿¼ÊÖ²á
+   23   3            LCD12864_WriteCmd(0x80 + (row % 32));//ÐÐºÅ£¬ÉÏÏÂ°ëÆÁµÄÆðÊ¼ÐÐºÅ¾ùÎª0x80
+*** WARNING C188 IN LINE 23 OF main.c: 'parameter 1': value truncated
+   24   3            LCD12864_WriteCmd(0x80 + (row / 32) * 8);//ÁÐºÅ£¬ÉÏ°ëÆÁµÄÁÐºÅ´Ó0x80¿ªÊ¼£¬ÏÂ°ëÆÁ´Ó0x88¿ªÊ¼
+*** WARNING C188 IN LINE 24 OF main.c: 'parameter 1': value truncated
+   25   3          }
+   26   2          LCD12864_WriteData(Uart_Recv);//½«±¾´Î½ÓÊÕµ½µÄ×Ö½ÚÐ´Èë
+   27   2          col++;
+   28   2          if(col >= 16)
+   29   2          {
+   30   3            col = 0;
+   31   3            row++;
+   32   3          }
+   33   2          if(row >= 64) 
+   34   2          {
+   35   3            row = 0;
+   36   3          }
+   37   2        }
+   38   1      }
+   39          
+   40          void main()
+   41          {
+   42   1        P0M1 = 0x00;
+   43   1        P0M0 = 0x00;
+   44   1        P4M1 = 0x00;
+   45   1        P4M0 = 0x00;
+   46   1        WTST = 0;
+   47   1        //ÒÔÉÏ²¿·ÖÊÇSTC32ÅäÖÃIO¿ÚºÍ³ÌÐò¶ÁÈ¡µÈ´ý¿ØÖÆ¼Ä´æÆ÷µÄ²Ù×÷
+   48   1        LCD12864_Init();
+   49   1        Uart1_Init();
+   50   1        LCD12864_WriteCmd(0x34);  //´ò¿ªÀ©³äÖ¸Áî,Õâ¸öÖ¸ÁîÖ´ÐÐµÄÊ±ºò»áÓÐÇåÆÁµÄÐ§¹û£¬ËùÒÔ²»ÄÜÆµ·±Ö´ÐÐ
+   51   1        LCD12864_WriteCmd(0x36);  //»æÍ¼£¬Õâ¸öÖ¸Áî²âÊÔÏÂÀ´Ö»ÐèÒª´ò¿ªÒ»´Î¾Í¿ÉÒÔÒ»Ö±½øÐÐ»æ»­£¬²»ÐèÒª¹Ø±ÕºóÓÖÖØÐÂ´ò¿
+             -ª
+   52   1        while(1);
+   53   1      }
+
+
+C251 COMPILER V5.60.0,  main                                                               21/04/24  18:50:23  PAGE 2   
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =       171     ------
+  ecode size           =    ------     ------
+  data size            =         3     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  2 WARNING(S),  0 ERROR(S)

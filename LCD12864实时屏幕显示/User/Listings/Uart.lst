@@ -1,0 +1,64 @@
+C251 COMPILER V5.60.0,  Uart                                                               21/04/24  18:50:23  PAGE 1   
+
+
+C251 COMPILER V5.60.0, COMPILATION OF MODULE Uart
+OBJECT MODULE PLACED IN .\Objects\Uart.obj
+COMPILER INVOKED BY: D:\Keil_v5\C251\BIN\C251.EXE ..\Driver\Uart.c INTR2 BROWSE INCDIR(..\Driver) DEBUG PRINT(.\Listings
+                    -\Uart.lst) TABS(2) OBJECT(.\Objects\Uart.obj) 
+
+stmt  level    source
+
+    1          #include <Uart.h>
+    2          //极限波特率可达230400bps@33.1776MHz，但是会出现横纹
+    3          void Uart1_Init(void) //115200bps@33.1776MHz
+    4          {
+    5   1        SCON = 0x50;    //8位数据,可变波特率
+    6   1        AUXR |= 0x40;   //定时器时钟1T模式
+    7   1        AUXR &= 0xFE;   //串口1选择定时器1为波特率发生器
+    8   1        TMOD &= 0x0F;   //设置定时器模式
+    9   1        TL1 = 0xB8;     //设置定时初始值
+   10   1        TH1 = 0xFF;     //设置定时初始值
+   11   1        ET1 = 0;      //禁止定时器中断
+   12   1        TR1 = 1;      //定时器1开始计时
+   13   1        ES = 1;       //使能串口1中断
+   14   1        EA = 1;
+   15   1      }
+   16          
+   17          /* 字节发送函数 */
+   18          void SendByte(unsigned char dat)
+   19          {
+   20   1        SBUF=dat;//将dat数据赋给SBUF，将数据发送出去
+   21   1        while(TI == 0);//等待数据发送
+   22   1        TI = 0;//将发送标志位清零
+   23   1      }
+   24          
+   25          /* 字符串发送函数 */
+   26          void Uart_Send_String(unsigned char *dat)
+   27          {
+   28   1        while(*dat != '\0')//当字符不为空时，继续发送
+   29   1          SendByte(*dat++);//发送后指针dat加1，指向下一个字节
+   30   1      }
+
+
+Module Information          Static   Overlayable
+------------------------------------------------
+  code size            =        61     ------
+  ecode size           =    ------     ------
+  data size            =    ------     ------
+  idata size           =    ------     ------
+  pdata size           =    ------     ------
+  xdata size           =    ------     ------
+  xdata-const size     =    ------     ------
+  edata size           =    ------     ------
+  bit size             =    ------     ------
+  ebit size            =    ------     ------
+  bitaddressable size  =    ------     ------
+  ebitaddressable size =    ------     ------
+  far data size        =    ------     ------
+  huge data size       =    ------     ------
+  const size           =    ------     ------
+  hconst size          =    ------     ------
+End of Module Information.
+
+
+C251 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
